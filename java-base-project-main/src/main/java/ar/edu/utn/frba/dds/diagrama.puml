@@ -1,0 +1,90 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+
+   Canal "1" *-- "1" GestorDeTransmisiones
+   Canal "1" *-- "*" Usuario : suscriptores
+   GestorDeTransmisiones "1" *-- "0..1" Transmision : transmisionEnVivo
+   GestorDeTransmisiones "1" *-- "*" Transmision : transmisionesHistoricas
+   Transmision "1" *-- "1" Chat
+   Transmision "1" *-- "*" Usuario : participantes
+   Chat "1" *-- "*" Mensaje
+   Mensaje "1" *-- "1" Usuario : enviadoPor
+   RepositorioCanales "1" *-- "*" Canal
+
+   class Canal {
+        - String nombre
+        - GestorDeTransmisiones gestorDeTransmisiones
+        - List<Integer> muestrasApoyo
+        - List<Usuario> suscriptores
+        + recibirMuestraApoya(Integer valor)
+        + iniciarTransmisionEnVivo(String titulo, Chat chat, List<String> categorias)
+        + detenerTransmisionEnVivo()
+        + getTransmisionesHistoricas(): List<Transmision>
+        + hayTransmisionEnVivo(): boolean
+        + getTransmisionEnVivo(): Transmision
+        + suscribirUsuario(Usuario usuario)
+        + desuscribirUsuario(Usuario usuario)
+        + unirseATransmision(Usuario usuario)
+        + irseDeTransmision(Usuario usuario)
+    }
+
+    class Chat {
+        - List<Usuario> participantes
+        - List<Mensaje> mensajes
+        + enviarMensaje(Mensaje mensaje)
+        + listarMensajesEnviadosPor(Usuario usuario): List<Mensaje>
+    }
+
+    class GestorDeTransmisiones {
+        - Transmision transmisionEnVivo
+        - List<Transmision> transmisionesHistoricas
+        + iniciarTransmision(String titulo, Chat chat, List<String> categorias)
+        + detenerTransmision()
+        + hayTransmisionEnVivo(): boolean
+    }
+
+    class Mensaje {
+        - String texto
+        - Usuario enviadoPor
+    }
+
+    class RepositorioCanales {
+        - List<Canal> canales
+        + RepositorioCanales()
+        + listarCanales(): List<Canal>
+        + buscarCanal(Canal canal): Canal
+        + listarTransmisionesHistoricas(Canal canal): List<Transmision>
+        + agregarCanal(Canal canal)
+        + eliminarCanal(Canal canal)
+        + listarTransmisionesEnVivo(): List<Transmision>
+    }
+
+    class Transmision {
+        - Chat chat
+        - String titulo
+        - List<String> categorias
+        - Integer numMaxParticipantesUnidos
+        - Integer numParticipantesUnidos
+        - List<Usuario> participantes
+        - LocalDateTime fechaInicio
+        - LocalDateTime fechaFin
+        + agregarCategoria(String categoria)
+        + eliminarCategoria(String categoria)
+        + unirseATransmision(Usuario usuario)
+        + irseDeTransmision(Usuario usuario)
+        + listarMensajesEnviadosPor(Usuario usuario): List<Mensaje>
+        + enviarMensaje(Mensaje mensaje)
+    }
+
+    class Usuario {
+        - String nombre
+
+    }
+
+
+}
+
+
+@enduml
