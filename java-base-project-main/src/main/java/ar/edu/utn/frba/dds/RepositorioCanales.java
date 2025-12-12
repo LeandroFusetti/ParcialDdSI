@@ -19,7 +19,6 @@ public class RepositorioCanales {
         return this.canales.stream().filter(c -> c.equals(canal))
             .findFirst()
             .orElseThrow(()-> new RuntimeException("No existe el canal"));
-
     }
 
     public List<Transmision> listarTransmisionesHistoricas(Canal canal){

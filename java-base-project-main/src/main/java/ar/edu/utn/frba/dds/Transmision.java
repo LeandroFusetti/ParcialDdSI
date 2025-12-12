@@ -12,7 +12,7 @@ public class Transmision {
     public String titulo;
     public List<String> categorias;
     public Integer numMaxParticipantesUnidos;
-    public Integer numParticipantesUnidos;
+    //public Integer numParticipantesUnidos;
     public List<Usuario> participantes;
     public LocalDateTime fechaInicio;
     public LocalDateTime fechaFin;
@@ -24,7 +24,7 @@ public class Transmision {
     this.fechaInicio = LocalDateTime.now();
     this.participantes = new ArrayList<>();
     this.numMaxParticipantesUnidos = 0;
-    this.numParticipantesUnidos = 0;
+    //this.numParticipantesUnidos = 0;
     }
     public void setFechaFin(LocalDateTime fechaFin){
         if(fechaFin.isBefore(this.fechaInicio)){
@@ -48,16 +48,16 @@ public class Transmision {
     }
 
     public void unirseATransmision(Usuario usuario){
-        this.numParticipantesUnidos++;
-        if(this.numMaxParticipantesUnidos<this.numParticipantesUnidos){
-            this.numMaxParticipantesUnidos = this.numParticipantesUnidos;
-        }
+        this.numMaxParticipantesUnidos++;
+//        if(this.numMaxParticipantesUnidos<this.numParticipantesUnidos){
+//            this.numMaxParticipantesUnidos = this.numParticipantesUnidos;
+//        }
 
         this.participantes.add(usuario);
         this.chat.participantes.add(usuario);
     }
     public void irseDeTransmision(Usuario usuario){
-        this.numParticipantesUnidos--;
+        //this.numParticipantesUnidos--;
         this.participantes.remove(usuario);
         this.chat.participantes.remove(usuario);
     }
@@ -68,5 +68,6 @@ public class Transmision {
     public void enviarMensaje(Mensaje mensaje){
         this.chat.enviarMensaje(mensaje);
     }
+
 
 }

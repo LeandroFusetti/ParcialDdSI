@@ -63,7 +63,7 @@ public class LiveSreamTest {
   @DisplayName("se detiene una transmision en vivo")
   public void seDetieneTransmisionEnVivo(){
     canal.iniciarTransmisionEnVivo("estamos en vivo",new Chat(), Arrays.asList("cocina","cocinando"));
-
+    canal.detenerTransmisionEnVivo();
     assertFalse(canal.hayTransmisionEnVivo());
   }
 
