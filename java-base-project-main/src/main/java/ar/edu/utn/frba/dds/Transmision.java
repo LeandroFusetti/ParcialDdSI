@@ -8,14 +8,13 @@ import java.util.List;
 
 @Getter
 public class Transmision {
-    public Chat chat;
-    public String titulo;
-    public List<String> categorias;
-    public Integer numMaxParticipantesUnidos;
-    public Integer numParticipantesUnidos;
-    public List<Usuario> participantes;
-    public LocalDateTime fechaInicio;
-    public LocalDateTime fechaFin;
+    private Chat chat;
+    private String titulo;
+    private List<String> categorias;
+    private Integer numMaxParticipantesUnidos;
+    private List<Canal> participantes;
+    private LocalDateTime fechaInicio;
+    private LocalDateTime fechaFin;
 
     public Transmision(String titulo,Chat chat,List <String> categorias){
     this.chat = chat;
@@ -24,7 +23,6 @@ public class Transmision {
     this.fechaInicio = LocalDateTime.now();
     this.participantes = new ArrayList<>();
     this.numMaxParticipantesUnidos = 0;
-    this.numParticipantesUnidos = 0;
     }
     public void setFechaFin(LocalDateTime fechaFin){
         if(fechaFin.isBefore(this.fechaInicio)){
@@ -47,23 +45,18 @@ public class Transmision {
         this.categorias.remove(categoria);
     }
 
-    public void unirseATransmision(Usuario usuario){
-        this.numParticipantesUnidos++;
-        if(this.numMaxParticipantesUnidos<this.numParticipantesUnidos){
-            this.numMaxParticipantesUnidos = this.numParticipantesUnidos;
-        }
-
-        this.participantes.add(usuario);
-        this.chat.participantes.add(usuario);
+    public void unirseATransmision(Canal participante){
+        this.numMaxParticipantesUnidos++;
+        this.participantes.add(participante);
+        this.chat.agregarParticipante(participante);
     }
-    public void irseDeTransmision(Usuario usuario){
-        this.numParticipantesUnidos--;
-        this.participantes.remove(usuario);
-        this.chat.participantes.remove(usuario);
+    public void irseDeTransmision(Canal participante){
+        this.participantes.remove(participante);
+        this.chat.quitarParticipante(participante);
     }
 
-    public List<Mensaje> listarMensajesEnviadosPor(Usuario usuario){
-        return this.chat.listarMensajesEnviadosPor(usuario);
+    public List<Mensaje> listarMensajesEnviadosPor(Canal participante){
+        return this.chat.listarMensajesEnviadosPor(participante);
     }
     public void enviarMensaje(Mensaje mensaje){
         this.chat.enviarMensaje(mensaje);

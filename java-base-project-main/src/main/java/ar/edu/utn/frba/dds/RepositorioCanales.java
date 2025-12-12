@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.Optional;
 
 public class RepositorioCanales {
-    public List<Canal> canales;
-
-    public RepositorioCanales() {
-        this.canales = new ArrayList<>();
-    }
+    private List<Canal> canales=new ArrayList<>();
+    private static final RepositorioCanales instance = new RepositorioCanales();
 
     public List<Canal> listarCanales(){
         return this.canales;
     }
 
+    public static RepositorioCanales getInstancia() {
+        return instance;
+    }
     public Canal buscarCanal(Canal canal){
         return this.canales.stream().filter(c -> c.equals(canal))
             .findFirst()

@@ -4,10 +4,10 @@ import lombok.Getter;
 
 @Getter
 public class Mensaje {
-    public String texto;
-    public Usuario enviadoPor;
+    private String texto;
+    private Canal enviadoPor;
 
-    public Mensaje(String texto,Usuario enviadoPor){
+    public Mensaje(String texto,Canal enviadoPor){
         this.texto = texto;
         this.enviadoPor = enviadoPor;
     }

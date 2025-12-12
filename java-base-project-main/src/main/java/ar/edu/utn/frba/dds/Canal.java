@@ -2,20 +2,23 @@ package ar.edu.utn.frba.dds;
 
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class Canal {
-    public String nombre;
-    public GestorDeTransmisiones gestorDeTransmisiones;
-    public List<Integer> muestrasApoyo;
-    public List<Usuario> suscriptores;
-    public Canal(String nombre,GestorDeTransmisiones gestorDeTransmisiones){
+    private String nombre;
+    private List<Integer> muestrasApoyo;
+    private List<Canal> suscriptores;
+    private Transmision transmisionEnVivo;
+    private List<Transmision> transmisionesHistoricas;
+
+    public Canal(String nombre){
         this.nombre = nombre;
-        this.gestorDeTransmisiones = gestorDeTransmisiones;
         this.muestrasApoyo = new ArrayList<>();
         this.suscriptores = new ArrayList<>();
+        this.transmisionesHistoricas = new ArrayList<>();
     }
 
     public void recibirMuestraApoya(Integer valor){
@@ -24,38 +27,50 @@ public class Canal {
         }
         this.muestrasApoyo.add(valor);
     }
-    public void iniciarTransmisionEnVivo(String titulo,Chat chat,List<String>categorias){
-        this.gestorDeTransmisiones.iniciarTransmision(titulo,chat,categorias);
-    }
-    public void detenerTransmisionEnVivo(){
-        this.gestorDeTransmisiones.detenerTransmision();
-    }
-    public List<Transmision> getTransmisionesHistoricas(){
-        return this.gestorDeTransmisiones.getTransmisionesHistoricas();
-    }
+
+
     public boolean hayTransmisionEnVivo(){
-        return this.gestorDeTransmisiones.hayTransmisionEnVivo();
+        return this.transmisionEnVivo!=null;
     }
+
+
     public Transmision getTransmisionEnVivo(){
         if(!this.hayTransmisionEnVivo()){
             throw new RuntimeException("No hay una transmision en vivo");
         }
-        return this.gestorDeTransmisiones.getTransmisionEnVivo();
+        return this.transmisionEnVivo;
     }
-    public void suscribirUsuario(Usuario usuario){
-        this.suscriptores.add(usuario);
+    public void suscribirUsuario(Canal participante){
+        this.suscriptores.add(participante);
     }
-    public void desuscribirUsuario(Usuario usuario){
-        this.suscriptores.remove(usuario);
+    public void desuscribirUsuario(Canal participante){
+        this.suscriptores.remove(participante);
     }
-    public void unirseATransmision(Usuario usuario){
+    public void unirseATransmision(Canal participante){
         if(!this.hayTransmisionEnVivo()){
             throw new RuntimeException("No hay una transmision en vivo");
         }
-        this.gestorDeTransmisiones.getTransmisionEnVivo().unirseATransmision(usuario);
+        this.transmisionEnVivo.unirseATransmision(participante);
     }
 
-    public void irseDeTransmision(Usuario usuario){
-        this.gestorDeTransmisiones.getTransmisionEnVivo().irseDeTransmision(usuario);
+    public void irseDeTransmision(Canal participante){
+        this.transmisionEnVivo.irseDeTransmision(participante);
     }
+
+    public void iniciarTransmision(String titulo,Chat chat,List<String>categorias){
+        if(this.transmisionEnVivo!=null){
+            throw new RuntimeException("Ya hay una transmision en vivo");
+        }
+        this.transmisionEnVivo= new Transmision(titulo,chat,categorias);
+    }
+    public void detenerTransmision(){
+        if(this.transmisionEnVivo==null){
+            throw new RuntimeException("No hay una transmision en vivo");
+        }
+        this.transmisionEnVivo.setFechaFin(LocalDateTime.now());
+        this.transmisionesHistoricas.add(this.transmisionEnVivo);
+        this.transmisionEnVivo=null;
+    }
+
+
 }

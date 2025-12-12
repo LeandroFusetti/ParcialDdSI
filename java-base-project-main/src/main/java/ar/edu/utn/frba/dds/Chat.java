@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Chat {
 
-    public List<Usuario> participantes;
-    public List<Mensaje> mensajes;
+    private List<Canal> participantes;
+    private List<Mensaje> mensajes;
 
     public Chat() {
         this.participantes = new ArrayList<>();
@@ -15,8 +15,15 @@ public class Chat {
     public void enviarMensaje(Mensaje mensaje){
         this.mensajes.add(mensaje);
     }
-    public List<Mensaje> listarMensajesEnviadosPor(Usuario usuario){
-        return this.mensajes.stream().filter(m->m.getEnviadoPor().equals(usuario)).toList();
+    public List<Mensaje> listarMensajesEnviadosPor(Canal participante){
+        return this.mensajes.stream().filter(m->m.getEnviadoPor().equals(participante)).toList();
+    }
+    public void agregarParticipante(Canal participante){
+        this.participantes.add(participante);
+    }
+
+    public void quitarParticipante(Canal participante){
+        this.participantes.remove(participante);
     }
 }
 

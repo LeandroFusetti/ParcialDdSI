@@ -1,0 +1,96 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+@startuml
+
+
+' Definición de clases
+
+class Canal <<entity>> {
+    - nombre: String
+    - muestrasApoyo: List<Integer>
+    - suscriptores: List<Canal>
+    - transmisionEnVivo: Transmision
+    - transmisionesHistoricas: List<Transmision>
+
+    + recibirMuestraApoya(valor: Integer): void
+    + hayTransmisionEnVivo(): boolean
+    + getTransmisionEnVivo(): Transmision
+    + unirseATransmision(participante: Canal): void
+    + irseDeTransmision(participante: Canal): void
+    + iniciarTransmision(titulo: String, chat: Chat, categorias: List<String>): void
+    + detenerTransmision(): void
+    + getTransmisionesHistoricas(): List<Transmision>
+}
+
+class Transmision <<transmission>> {
+    - chat: Chat
+    - titulo: String
+    - categorias: List<String>
+    - numMaxParticipantesUnidos: Integer
+    - participantes: List<Canal>
+    - fechaInicio: LocalDateTime
+    - fechaFin: LocalDateTime
+
+    + setFechaFin(fechaFin: LocalDateTime): void
+    + unirseATransmision(participante: Canal): void
+    + irseDeTransmision(participante: Canal): void
+    + listarMensajesEnviadosPor(participante: Canal): List<Mensaje>
+    + enviarMensaje(mensaje: Mensaje): void
+}
+
+class Chat <<chat>> {
+    - participantes: List<Canal>
+    - mensajes: List<Mensaje>
+
+
+    + enviarMensaje(mensaje: Mensaje): void
+    + listarMensajesEnviadosPor(participante: Canal): List<Mensaje>
+}
+
+class Mensaje <<message>> {
+    - texto: String
+    - enviadoPor: Canal
+
+    + getTexto(): String
+    + getEnviadoPor(): Canal
+}
+
+class RepositorioCanales <<repository>> {
+    - canales: List<Canal>
+
+    + listarCanales(): List<Canal>
+    + buscarCanal(canal: Canal): Canal
+    + listarTransmisionesHistoricas(canal: Canal): List<Transmision>
+    + listarTransmisionesEnVivo(): List<Transmision>
+}
+
+' Relaciones entre clases
+
+' Canal contiene Transmision
+Canal  -->  Transmision : transmisionEnVivo
+Canal  --> "*" Transmision : transmisionesHistoricas
+
+' Transmision contiene Chat
+Transmision  -->  Chat : chat
+
+' Chat contiene Mensajes
+Chat  --> "*" Mensaje : mensajes
+
+' Mensaje es enviado por Canal
+Mensaje --> Canal : enviadoPor
+
+' Repositorio maneja Canales
+RepositorioCanales  --> "*" Canal : canales
+
+' Transmision tiene participantes (Canales)
+Transmision  --> "*" Canal : participantes
+
+' Chat tiene participantes (Canales)
+Chat  --> "*" Canal : participantes
+
+' Canal tiene suscriptores (otros Canales)
+Canal  --> "*" Canal : suscriptores
+
+
+@enduml
