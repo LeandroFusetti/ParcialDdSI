@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds;
 
+import ar.edu.utn.frba.dds.Preferencia.Chat;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -10,12 +11,20 @@ public class Canal {
     public String nombre;
     public GestorDeTransmisiones gestorDeTransmisiones;
     public List<Integer> muestrasApoyo;
-    public List<Usuario> suscriptores;
+    public List<Canal> suscriptores;
+    public List<Canal>baneados;
     public Canal(String nombre,GestorDeTransmisiones gestorDeTransmisiones){
         this.nombre = nombre;
         this.gestorDeTransmisiones = gestorDeTransmisiones;
         this.muestrasApoyo = new ArrayList<>();
         this.suscriptores = new ArrayList<>();
+    }
+
+    public void banear(Canal canal){
+        this.baneados.add(canal);
+    }
+    public void quitarBanea(Canal canal){
+        this.baneados.remove(canal);
     }
 
     public void recibirMuestraApoya(Integer valor){
@@ -24,7 +33,7 @@ public class Canal {
         }
         this.muestrasApoyo.add(valor);
     }
-    public void iniciarTransmisionEnVivo(String titulo,Chat chat,List<String>categorias){
+    public void iniciarTransmisionEnVivo(String titulo, Chat chat, List<String>categorias){
         this.gestorDeTransmisiones.iniciarTransmision(titulo,chat,categorias);
     }
     public void detenerTransmisionEnVivo(){
@@ -42,20 +51,20 @@ public class Canal {
         }
         return this.gestorDeTransmisiones.getTransmisionEnVivo();
     }
-    public void suscribirUsuario(Usuario usuario){
-        this.suscriptores.add(usuario);
+    public void suscribirUsuario(Canal suscriptor){
+        this.suscriptores.add(suscriptor);
     }
-    public void desuscribirUsuario(Usuario usuario){
-        this.suscriptores.remove(usuario);
+    public void desuscribirUsuario(Canal suscriptor){
+        this.suscriptores.remove(suscriptor);
     }
-    public void unirseATransmision(Usuario usuario){
+    public void unirseATransmision(Canal participante){
         if(!this.hayTransmisionEnVivo()){
             throw new RuntimeException("No hay una transmision en vivo");
         }
-        this.gestorDeTransmisiones.getTransmisionEnVivo().unirseATransmision(usuario);
+        this.gestorDeTransmisiones.getTransmisionEnVivo().unirseATransmision(participante);
     }
 
-    public void irseDeTransmision(Usuario usuario){
-        this.gestorDeTransmisiones.getTransmisionEnVivo().irseDeTransmision(usuario);
+    public void irseDeTransmision(Canal participante){
+        this.gestorDeTransmisiones.getTransmisionEnVivo().irseDeTransmision(participante);
     }
 }
